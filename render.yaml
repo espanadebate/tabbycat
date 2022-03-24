@@ -1,4 +1,11 @@
 services:
+  - type: redis
+    name: tc_redis
+    ipAllowList: # required
+      - source: 0.0.0.0
+        description: everywhere
+    plan: free
+    maxmemoryPolicy: allkeys-lru # (default)
   - type: web
     name: tabbycat
     env: python
@@ -11,10 +18,16 @@ services:
         fromDatabase:
           name: tc_db
           property: connectionString
-      - key: REDIS_HOSTNAME
-        sync: false
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: tc_redis
+          property: host
       - key: REDIS_PORT
-        sync: false
+        fromService:
+          type: redis
+          name: tc_redis
+          property: port
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
@@ -23,6 +36,13 @@ services:
         sync: false
       - key: TIME_ZONE
         sync: false
+  - type: redis
+    name: tc_redis
+    ipAllowList: # required
+      - source: 0.0.0.0
+        description: everywhere
+    plan: free
+    maxmemoryPolicy: allkeys-lru # (default)
 
 databases:
   - name: tc_db

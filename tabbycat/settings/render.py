@@ -31,13 +31,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 # Caching
 # ==============================================================================
 
-REDIS_HOSTNAME = os.environ.get('REDIS_HOSTNAME')
+REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = os.environ.get('REDIS_PORT')
+
+print("REDIS_HOST", REDIS_HOST)
+print("REDIS_PORT", REDIS_PORT)
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://" + REDIS_HOSTNAME + ":" + REDIS_PORT,
+        "LOCATION": "redis://" + REDIS_HOST + ":" + REDIS_PORT,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "SOCKET_CONNECT_TIMEOUT": 5,
@@ -51,7 +54,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": ["redis://" + REDIS_HOSTNAME + ":" + REDIS_PORT],
+            "hosts": ["redis://" + REDIS_HOST + ":" + REDIS_PORT],
         },
     },
 }
